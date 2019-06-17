@@ -11,7 +11,10 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
+
 import homeRouter from './modules/home'
+import productRouter from './modules/product'
+import salesRouter from './modules/sales'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -131,6 +134,8 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   homeRouter,
+  productRouter,
+  salesRouter,
   {
     path: '/permission',
     component: Layout,
@@ -191,7 +196,6 @@ export const asyncRoutes = [
   chartsRouter,
   nestedRouter,
   tableRouter,
-
   {
     path: '/example',
     component: Layout,
