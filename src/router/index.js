@@ -11,7 +11,10 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
+
 import homeRouter from './modules/home'
+import productRouter from './modules/product'
+import salesRouter from './modules/sales'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -40,6 +43,9 @@ import homeRouter from './modules/home'
  * all roles can be accessed
  */
 export const constantRoutes = [
+  homeRouter,
+  productRouter,
+  salesRouter,
   {
     path: '/redirect',
     component: Layout,
@@ -130,7 +136,6 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  homeRouter,
   {
     path: '/permission',
     component: Layout,
@@ -191,7 +196,6 @@ export const asyncRoutes = [
   chartsRouter,
   nestedRouter,
   tableRouter,
-
   {
     path: '/example',
     component: Layout,
