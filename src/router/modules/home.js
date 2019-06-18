@@ -19,7 +19,7 @@ const homeRouter = {
       children: [
         {
           path: 'information',
-          component: () => import('@/views/home/my/myInformation'),
+          component: () => import('@/views/home/my/information'),
           name: 'Home-my-information',
           meta: { title: '我的信息' }
         }

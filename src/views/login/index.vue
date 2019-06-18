@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">登录</h3>
       </div>
 
       <el-form-item prop="username">
@@ -45,8 +45,9 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <!-- <img style="-webkit-user-select: none;margin: auto;" src="http://192.168.2.24p5/sys/auth/vcode.jpg"> -->
+      <img style="-webkit-user-select: none;margin: auto;" src="http://101.132.27.104/sys/auth/vcode.jpg">
       <div style="position:relative">
         <div class="tips">
           <span>Username : admin</span>
@@ -75,6 +76,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { authQuery } from '@/api/auth'
 import SocialSign from './components/SocialSignin'
 
 export default {
@@ -98,7 +100,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '12345678'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -133,11 +135,17 @@ export default {
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
+    // authQuery()
   },
   destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    authQuery() {
+      authQuery().then(res => {
+        console.log(res)
+      })
+    },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {

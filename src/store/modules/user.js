@@ -1,4 +1,5 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout } from '@/api/user'
+import { authQuery } from '@/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -32,11 +33,21 @@ const actions = {
   // user login
   login({ commit }, userInfo) {
     const { username, password } = userInfo
+    const body = {
+      'moduleId': 10101,
+      'reqDtos': {
+        'lang': 'CHS',
+        'password': password,
+        'userName': username,
+        'verifyCode': '1323'
+      }
+    }
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      login(body).then(response => {
+        console.log(response)
+        const token = getToken()
+        setToken(token)
+        commit('SET_TOKEN', token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -47,24 +58,27 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
+      authQuery(state.token).then(response => {
+        const { data, user } = response
+        console.log(data)
 
-        if (!data) {
-          reject('Verification failed, please Login again.')
+        if (!data && !user) {
+          reject('data || user 不存在')
         }
 
-        const { roles, name, avatar, introduction } = data
-
+        // const { roles, name, avatar, introduction } = data
         // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
+        // if (!roles || roles.length <= 0) {
+        //   reject('getInfo: roles must be a non-null array!')
+        // }
+        if (data.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
 
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
+        commit('SET_ROLES', data)
+        commit('SET_NAME', user.username)
+        // commit('SET_AVATAR', avatar)
+        // commit('SET_INTRODUCTION', introduction)
         resolve(data)
       }).catch(error => {
         reject(error)
