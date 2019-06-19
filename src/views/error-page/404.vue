@@ -32,10 +32,9 @@ export default {
     }
   },
   methods: {
-    auth() {
-      authQuery().then(res => {
-        console.log(res)
-      })
+    async auth() {
+      const data = await authQuery()
+      console.log(data)
     }
   }
 }
