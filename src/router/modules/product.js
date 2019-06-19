@@ -5,6 +5,7 @@ const productRouter = {
   component: Layout,
   redirect: '/product/manage/list',
   name: 'Product',
+  id: 5,
   meta: {
     title: '产品系统'
   },

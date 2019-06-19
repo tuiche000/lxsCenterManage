@@ -5,6 +5,7 @@ const salesRouter = {
   component: Layout,
   redirect: '/sales/my/information',
   name: 'Sales',
+  id: 3,
   meta: {
     title: '销售系统'
   },

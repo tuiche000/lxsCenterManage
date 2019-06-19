@@ -43,9 +43,6 @@ import salesRouter from './modules/sales'
  * all roles can be accessed
  */
 export const constantRoutes = [
-  homeRouter,
-  productRouter,
-  salesRouter,
   {
     path: '/redirect',
     component: Layout,
@@ -136,6 +133,9 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  homeRouter,
+  productRouter,
+  salesRouter,
   {
     path: '/permission',
     component: Layout,
