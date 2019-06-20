@@ -18,7 +18,7 @@ import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
-
+import onlyNumber from '@/directive/el-input' // el-input全局指令
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -31,7 +31,7 @@ import { mockXHR } from '../mock'
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
-
+Vue.use(onlyNumber)
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
