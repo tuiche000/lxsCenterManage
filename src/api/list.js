@@ -49,4 +49,18 @@ export function updatePslDrpPolicyStatus(data) {
     data
   })
 }
+export function savePslDrpPolicy(data) {
+  return request({
+    url: '/sys/product/drpPolicyPsl/savePslDrpPolicy',
+    method: 'post',
+    data
+  })
+}
 
+export function batchSavePslDrpPolicy(data) {
+  return request({
+    url: '/sys/product/drpPolicyPsl/batchSavePslDrpPolicy',
+    method: 'post',
+    data
+  })
+}
