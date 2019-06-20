@@ -32,6 +32,14 @@ const productRouter = {
           name: 'Product-manage-log',
           id: 51009,
           meta: { title: '操作日志' }
+        },
+        {
+          path: 'listDetail',
+          component: () => import('@/views/product/manage/list/listDetail'),
+          name: 'Product-manage-listDetail',
+          hidden: true,
+          meta: { title: '修改产品' }
+
         }
       ]
     }
