@@ -1,7 +1,7 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 
 /**
- * Use meta.role to determine if the current user has permission
+ * 判断是否有权限的路由，返回true为有则显示在侧边栏，false则不显示
  * @param roles
  * @param route
  */
@@ -11,7 +11,7 @@ function hasPermission(roles, route) {
     // console.log(roles)
     return roles.some(role => {
       // return route.path.includes(role)
-      return route.id === role.id
+      return route.id === role
     })
   } else {
     return false
@@ -24,31 +24,43 @@ function hasPermission(roles, route) {
  * @param roles
  */
 export function filterAsyncRoutes(routes, roles) {
-  const res = []
+  var _roles = []
 
-  // let _roles = []
-  // function rolesPush(id) {
-  //   _roles.push(id)
-  // }
-  // roles.forEach(item => {
-  //   rolesPush(item.id)
-  //   if (item.children) {
-
-  //   }
-  // })
-  // console.log(_roles)
-
-  routes.forEach(route => {
-    const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
-      // if (tmp.children) {
-      //   tmp.children = filterAsyncRoutes(tmp.children, roles)
-      // }
-      res.push(tmp)
+  for (let i = 0; i < roles.length; i++) {
+    next(roles[i])
+  }
+  function next(val) {
+    if (val instanceof Array) {
+      val.forEach(item => {
+        next(item)
+      })
+    } else {
+      _roles.push(val.id)
     }
-  })
-  console.log(res)
-  return res
+    if (val.moduleGroups) {
+      next(val.moduleGroups)
+    }
+    if (val.modules) {
+      next(val.modules)
+    }
+  }
+
+  function filterAsymcRoute(routes, _roles) {
+    const res = []
+
+    routes.forEach(route => {
+      const tmp = { ...route }
+      if (hasPermission(_roles, tmp)) {
+        if (tmp.children) {
+          tmp.children = filterAsymcRoute(tmp.children, _roles)
+        }
+        res.push(tmp)
+      }
+    })
+    return res
+  }
+
+  return filterAsymcRoute(routes, _roles)
 }
 
 const state = {
