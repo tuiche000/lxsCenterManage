@@ -51,6 +51,7 @@ export default {
     // }
   },
   created() {
+    console.log(this.$route)
     this.product = JSON.parse(this.$route.query.detail)
   },
   methods: {

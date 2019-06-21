@@ -2,7 +2,7 @@
   <div class="main_center flex_div">
     <div class="flex_auto div_card flex_div">
       <!-- 2019-06-19先通过产品type条件渲染 后期优化 -->
-      <el-table v-if="productType==22" ref="multipleTable" :data="list" stripe height="100%" class="div_card_mid flex_auto table_left_2 table_left_3" tooltip-effect="dark">
+      <el-table v-if="productType==22" ref="multipleTable" :data="list" stripe max-height="100%" class="div_card_mid flex_auto table_left_2 table_left_3" tooltip-effect="dark">
         <el-table-column type="index" label="序号" align="center" show-overflow-tooltip />
         <el-table-column prop="storeName" label="编号" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
@@ -45,15 +45,20 @@
         </el-table-column>
       </el-table>
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="listPageNum" :limit.sync="listPageSize" @pagination="getList" />
-
     </div>
     <el-dialog :visible.sync="dialogTableVisible">
+      <span slot="title" class="dialog-footer">
+        <div class="x-flex-container between">
+          <h3 style="font-size:18px;color:#303133;">分销价格</h3>
+          <el-button style="min-width:100px;" class="m-r-30" type="primary" plain @click="batch">批量调整分销价格</el-button>
+        </div>
+      </span>
       <el-table tooltip-effect="dark" :data="gridData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <el-table-column label="分组/成员" width="150" show-overflow-tooltip>
           <template slot-scope="scope">
             <span>{{ scope.row.groupName }}</span>
-            <el-button v-if="scope.row.groupId !=1" type="text">查看成员</el-button>
+            <el-button v-if="scope.row.groupId !=1" type="text" @click="openMemberList(scope.row)">查看成员</el-button>
           </template>
         </el-table-column>
         <el-table-column label="分销价" width="200">
@@ -122,13 +127,15 @@
           <el-button style="min-width:200px;" type="primary" @click="saveForm">保 存</el-button>
         </span>
       </el-dialog>
-      <span slot="title" class="dialog-footer">
-        <div class="x-flex-container between">
-          <h3 style="font-size:18px;color:#303133;">分销价格</h3>
-          <el-button style="min-width:100px;" class="m-r-30" type="primary" plain @click="batch">批量调整分销价格</el-button>
-        </div>
-      </span>
+      <el-dialog title="查看成员" width="30%" :visible.sync="memberState" append-to-body>
+        <el-table :data="memberList">
+          <el-table-column property="agentId" label="ID" min-width="150" />
+          <el-table-column property="companyName" label="代理商成员" min-width="200" show-overflow-tooltip />
+        </el-table>
+      </el-dialog>
+
     </el-dialog>
+
   </div>
 </template>
 
@@ -172,11 +179,13 @@ export default {
     return {
       list: [],
       gridData: [],
+      memberList: [],
       listTotal: 0,
       listPageNum: 1,
       listPageSize: 20,
-      dialogTableVisible: false,
-      innerVisible: false,
+      dialogTableVisible: false, // 最大弹框状态
+      innerVisible: false, // 嵌套弹窗状态
+      memberState: false, // 查看成员弹窗状态
       checkList: [],
       checkListParams: {
         type: null,
@@ -222,6 +231,11 @@ export default {
           this.openType === 1 ? this.sendPsl(2) : this.batchSendPsl(2)
           break
       }
+    },
+    // 查看成员
+    openMemberList(row) {
+      this.memberList = row.drpPolicyAgentDTOS
+      this.memberState = true
     },
     /** 验证是否为null **/
     isNull(val) {
