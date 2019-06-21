@@ -37,6 +37,7 @@ const productRouter = {
           path: 'listDetail',
           component: () => import('@/views/product/manage/list/listDetail'),
           name: 'Product-manage-listDetail',
+          id: 2,
           hidden: true,
           meta: { title: '修改产品' }
 

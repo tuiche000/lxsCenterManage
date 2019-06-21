@@ -1,28 +1,39 @@
 <template>
   <div>
     我是关联资源
+    <isTravel v-if="isTravel" :product-id="productId" :product-type="productType" />
   </div>
 </template>
 
 <script>
-
+import isTravel from './isTravel'
 export default {
+  components: { isTravel },
   filters: {
 
   },
   props: {
-
+    productId: {
+      type: String,
+      default: '0'
+    },
+    productType: {
+      type: String,
+      default: '0'
+    }
   },
   data() {
     return {
-      list: null,
-      listQuery: {
-        page: 1,
-        limit: 5,
-        type: this.type,
-        sort: '+id'
-      },
-      loading: false
+
+    }
+  },
+  computed: {
+    isTravel() {
+      if (this.productType === '22' || this.productType === '60' || this.productType === '64') {
+        return true
+      } else {
+        return false
+      }
     }
   },
   created() {

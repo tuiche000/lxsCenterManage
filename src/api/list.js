@@ -35,6 +35,7 @@ export function queryTheSingleSegment(data) {
     data
   })
 }
+// 行程分销政策
 export function queryPslDrpPolicy(data) {
   return request({
     url: '/sys/product/drpPolicyPsl/queryPslDrpPolicy',
@@ -49,4 +50,27 @@ export function updatePslDrpPolicyStatus(data) {
     data
   })
 }
+export function savePslDrpPolicy(data) {
+  return request({
+    url: '/sys/product/drpPolicyPsl/savePslDrpPolicy',
+    method: 'post',
+    data
+  })
+}
 
+export function batchSavePslDrpPolicy(data) {
+  return request({
+    url: '/sys/product/drpPolicyPsl/batchSavePslDrpPolicy',
+    method: 'post',
+    data
+  })
+}
+// 结束
+// 产品分销价格 产品列表 自由行-自由行套餐-跟团游相关
+export function queryProductDrpPolicy(query) {
+  return request({
+    url: '/sys/product/drpPolicyProduct/queryProductDrpPolicy',
+    method: 'get',
+    params: query
+  })
+}

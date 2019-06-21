@@ -524,3 +524,60 @@ b {
         margin-left: $i*5px;
     }
 }
+
+.x-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &.end {
+        justify-content: flex-end;
+    }
+    &.start {
+        justify-content: flex-start;
+    }
+}
+
+.x-flex-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+    &.r-reverse {
+        flex-direction: row-reverse;
+    }
+    &.c-reverse {
+        flex-direction: column-reverse;
+    }
+    &.column {
+        flex-direction: column;
+    }
+    &.start {
+        justify-content: flex-start;
+    }
+    .c-start {
+        align-self: start;
+    }
+    &.end {
+        justify-content: flex-end;
+    }
+    &.avg {
+        justify-content: space-around;
+    }
+    &.between {
+        justify-content: space-between;
+    }
+    &.evenly {
+        justify-content: space-evenly;
+    }
+    &.wrap {
+        flex-wrap: wrap;
+    }
+    >.x-flex-a {
+        flex: auto;
+        width: 10px;
+    }
+    >.x-auto {
+        flex: auto;
+    }
+}

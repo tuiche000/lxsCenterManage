@@ -90,7 +90,7 @@
           <el-popover trigger="hover" placement="top">
             <p>{{ scope.row.productName }}</p>
             <div slot="reference" class="name-wrapper">
-              <p class="ellipsis">{{ scope.row.productName }}</p>
+              <p class="ellipsis" style="cursor:pointer;">{{ scope.row.productName }}</p>
             </div>
           </el-popover>
         </template>
@@ -100,7 +100,7 @@
           <el-popover trigger="hover" placement="top">
             <p>{{ scope.row.title }}</p>
             <div slot="reference" class="name-wrapper">
-              <p class="ellipsis">{{ scope.row.title }}</p>
+              <p class="ellipsis" style="cursor:pointer;">{{ scope.row.title }}</p>
             </div>
           </el-popover>
         </template>
