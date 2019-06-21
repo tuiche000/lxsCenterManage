@@ -15,14 +15,12 @@
         <div class="bullshit__headline">{{ message }}</div>
         <div class="bullshit__info">Please check that the URL you entered is correct, or click the button below to return to the homepage.</div>
         <a href="" class="bullshit__return-home">Back to home</a>
-        <button @click="auth">11111111111111111111</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { authQuery } from '@/api/auth'
 
 export default {
   name: 'Page404',
@@ -32,10 +30,6 @@ export default {
     }
   },
   methods: {
-    async auth() {
-      const data = await authQuery()
-      console.log(data)
-    }
   }
 }
 </script>
