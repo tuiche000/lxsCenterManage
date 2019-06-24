@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:30px;">
+  <div>
     <el-alert style="width:100%;" :closable="false" title="产品管理">
       <router-view />
     </el-alert>

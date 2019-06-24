@@ -3,7 +3,7 @@ import Layout from '@/layout'
 const salesRouter = {
   path: '/sales',
   component: Layout,
-  redirect: '/sales/my/information',
+  redirect: '/sales/sales/pro',
   name: 'Sales',
   id: 3,
   meta: {

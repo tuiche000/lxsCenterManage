@@ -1,7 +1,13 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
       <div class="title-container">
         <h3 class="title">登录</h3>
       </div>
@@ -45,10 +51,18 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin"
+      >登录</el-button>
       <!-- <img style="-webkit-user-select: none;margin: auto;" src="http://192.168.2.24p5/sys/auth/vcode.jpg"> -->
-      <img style="-webkit-user-select: none;margin: auto;" src="http://101.132.27.104/sys/auth/vcode.jpg">
-      <div style="position:relative">
+      <img
+        style="-webkit-user-select: none;margin: auto; opacity: 0"
+        src="http://101.132.27.104/sys/auth/vcode.jpg"
+      >
+      <!-- <div style="position:relative">
         <div class="tips">
           <span>Username : admin</span>
           <span>Password : any</span>
@@ -61,7 +75,7 @@
         <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
           Or connect with
         </el-button>
-      </div>
+      </div>-->
     </el-form>
 
     <el-dialog title="Or connect with" :visible.sync="showDialog">
@@ -103,8 +117,12 @@ export default {
         password: '12345678'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [
+          { required: true, trigger: 'blur', validator: validateUsername }
+        ],
+        password: [
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -148,7 +166,10 @@ export default {
     },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
-        if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
+        if (
+          (shiftKey && (key >= 'a' && key <= 'z')) ||
+          (!shiftKey && (key >= 'A' && key <= 'Z'))
+        ) {
           this.capsTooltip = true
         } else {
           this.capsTooltip = false
@@ -172,9 +193,13 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
+          this.$store
+            .dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              this.$router.push({
+                path: this.redirect || '/',
+                query: this.otherQuery
+              })
               this.loading = false
             })
             .catch(() => {
@@ -220,8 +245,8 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -232,6 +257,12 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
+  width: 100vw;
+  height: 100vh;
+  min-width: 1263px;
+  // position: absolute;
+  background: url('~@/assets/bg.jpg') no-repeat top center;
+  background-size: 100% 100%;
   .el-input {
     display: inline-block;
     height: 47px;
@@ -264,9 +295,9 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
