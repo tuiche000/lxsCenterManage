@@ -80,31 +80,9 @@
       style="width: 100%;"
       @row-dblclick="rowDbclick"
     >
-      <el-table-column label="产品ID" prop="productId" align="center" width="80">
-        <!-- <template slot-scope="scope">
-          <span>{{ scope.row.productId }}</span>
-        </template> -->
-      </el-table-column>
-      <el-table-column label="产品名称" min-width="150" align="center">
-        <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>{{ scope.row.productName }}</p>
-            <div slot="reference" class="name-wrapper">
-              <p class="ellipsis" style="cursor:pointer;">{{ scope.row.productName }}</p>
-            </div>
-          </el-popover>
-        </template>
-      </el-table-column>
-      <el-table-column label="产品副标题" min-width="150" align="center" prop="title">
-        <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>{{ scope.row.title }}</p>
-            <div slot="reference" class="name-wrapper">
-              <p class="ellipsis" style="cursor:pointer;">{{ scope.row.title }}</p>
-            </div>
-          </el-popover>
-        </template>
-      </el-table-column>
+      <el-table-column label="产品ID" prop="productId" align="center" width="80" />
+      <el-table-column label="产品名称" prop="productName" align="center" width="150" show-overflow-tooltip />
+      <el-table-column label="产品副标题" prop="title" align="center" width="150" show-overflow-tooltip />
       <el-table-column label="产品类型" min-width="60" align="center" prop="productTypeName">
         <!-- <template slot-scope="scope">
           <span>{{ scope.row.author }}</span>
@@ -136,7 +114,7 @@
       <el-table-column label="制作状态" min-width="100" align="center" prop="typeEditName" />
       <el-table-column label="发布状态" min-width="100" align="center" prop="typePublishName" />
       <el-table-column label="创建时间" min-width="150" align="center" prop="createTime" />
-      <!-- <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
@@ -154,7 +132,6 @@
       </el-table-column> -->
     </el-table>
 
-    <!-- <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" /> -->
     <pagination v-show="total>0" :total="total" :page.sync="params.paginationDTO.pageNumber" :limit.sync="params.paginationDTO.pageSize" @pagination="getList" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
@@ -491,11 +468,6 @@ export default {
 }
 </script>
 <style lang='scss'>
-  .ellipsis {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
   .right{
     text-align: right;
   }

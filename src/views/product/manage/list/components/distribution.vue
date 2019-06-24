@@ -28,6 +28,7 @@ export default {
     }
   },
   computed: {
+    // 自由行 跟团游 等相关业务
     isTravel() {
       if (this.productType === '22' || this.productType === '60' || this.productType === '64') {
         return true

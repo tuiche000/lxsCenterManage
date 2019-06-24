@@ -1,6 +1,8 @@
 <template>
   <div>
-    我是旅游页面组件
+    <div>
+      <el-button style="float:right;" type="primary" @click="batch">批量调整分销价格</el-button>
+    </div>
     <el-table tooltip-effect="dark" :data="gridData" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" />
       <el-table-column label="分组/成员" width="150" show-overflow-tooltip>
@@ -74,15 +76,40 @@
       <span slot="footer" class="dialog-footer">
         <el-button style="min-width:200px;" type="primary" @click="saveForm">保 存</el-button>
       </span>
+
+    </el-dialog>
+    <el-dialog title="查看成员" width="30%" :visible.sync="memberState">
+      <el-table :data="memberList">
+        <el-table-column property="agentId" label="ID" min-width="150" />
+        <el-table-column property="companyName" label="代理商成员" min-width="200" show-overflow-tooltip />
+      </el-table>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { queryProductDrpPolicy } from '@/api/list'
+import { queryProductDrpPolicy, updateProductDrpPolicyStatus, saveProductDrpPolicy, batchSaveProductDrpPolicy } from '@/api/list'
 export default {
   filters: {
 
+  },
+  directives: {
+    'enterNumber': {
+      inserted: function(el) {
+        el.addEventListener('keypress', function(e) {
+          e = e || window.event
+          const charcode = typeof e.charCode === 'number' ? e.charCode : e.keyCode
+          const re = /\d/
+          if (!re.test(String.fromCharCode(charcode)) && charcode > 9 && !e.ctrlKey) {
+            if (e.preventDefault) {
+              e.preventDefault()
+            } else {
+              e.returnValue = false
+            }
+          }
+        })
+      }
+    }
   },
   props: {
     productId: {
@@ -99,8 +126,10 @@ export default {
       selectList: [{ id: '1', name: '增加' }, { id: '2', name: '减少' }],
       checkList: [],
       innerVisible: false, // 弹窗状态
+      memberState: false, // 查看成员弹窗状态
       openType: '', // 打开方式 单个为1 批量为2
       gridData: [], // 表格数据
+      memberList: [],
       adjustPrice: {}, // 调整分销价格对象
       batchAdjustPrice: '', // 批量调整分销对象包含代理商合集
       checkListParams: {
@@ -116,6 +145,59 @@ export default {
     this.getList()
   },
   methods: {
+    // 多选框的变动
+    handleSelectionChange(val) {
+      console.log(val)
+      var agentIds = val.map(item => item.drpPolicyAgentDTOS.map(v2 => v2.agentId).join(',')).join(',')
+      this.batchAdjustPrice = {
+        'reqDtos': {
+          'agentIds': agentIds,
+          'num': '',
+          'productId': this.productId,
+          'resourceId': '',
+          'segmentId': '',
+          'type': ''
+        }
+      }
+      console.log(this.batchAdjustPrice)
+    },
+    // 调整分销价格
+    reviseDisPri(row) {
+      this.openType = 1
+      this.adjustPrice = row
+      this.innerVisible = true
+    },
+    isNull(val) {
+      if (val === null || val === undefined || val === '' || val === 'null' || val === 'undefined') {
+        return true
+      } return false
+    },
+    // 打开批量调整分销价格
+    batch() {
+      if (this.batchAdjustPrice.reqDtos && this.batchAdjustPrice.reqDtos.agentIds) {
+        this.openType = 2
+        this.innerVisible = true
+      } else {
+        this.$message('请选择分组')
+      }
+    },
+    // 查看成员
+    openMemberList(row) {
+      this.memberList = row.drpPolicyAgentDTOS
+      this.memberState = true
+    },
+    getmodifyNum(type) {
+      var num
+      if (type === 1) {
+        num = this.checkListParams.type === '1' ? (this.checkListParams.amount * 1) : -(this.checkListParams.amount * 1)
+      } else if (type === 2) {
+        num = this.checkListParams.type1 === '1' ? (this.checkListParams.amount1 * 1) : -(this.checkListParams.amount1 * 1)
+        // 由于过滤器有问题 ui正常 e.target.value也是正确的 但是v-model值错误 手动更新
+        if (num > 100)num = 100
+        if (num < -100)num = -100
+      }
+      return num
+    },
     // 保存调整价格
     saveForm() {
       if (this.checkList.length === 0) {
@@ -131,7 +213,7 @@ export default {
             })
             return false
           }
-          // this.openType === 1 ? this.sendPsl(1) : this.batchSendPsl(1)
+          this.openType === 1 ? this.sendPsl(1) : this.batchSendPsl(1)
           break
         case 2:// 比例
           if (this.isNull(this.checkListParams.type1) || this.isNull(this.checkListParams.amount1)) {
@@ -141,123 +223,110 @@ export default {
             })
             return false
           }
-          // this.openType === 1 ? this.sendPsl(2) : this.batchSendPsl(2)
+          this.openType === 1 ? this.sendPsl(2) : this.batchSendPsl(2)
           break
       }
     },
-    // 单个发起修改请求
-    // sendPsl(type) {
-    //   console.log(this.adjustPrice)
-    //   var agentIds = this.adjustPrice.drpPolicyAgentDTOS.map(item => item.agentId).join(',')
-    //   var { groupId, productId, resourceId, segmentId, status } = this.adjustPrice
-    //   var num = this.getmodifyNum(type)
-    //   var params = {
-    //     reqDtos: {
-    //       agentIds,
-    //       groupId,
-    //       num,
-    //       productId,
-    //       resourceId,
-    //       segmentId,
-    //       status,
-    //       type
-    //     }
-    //   }
-    //   savePslDrpPolicy(params).then(res => {
-    //     console.log(res)
-    //     if (!res.hasError) {
-    //       this.$message({
-    //         message: res.message,
-    //         type: 'success'
-    //       })
-    //       this.distributionPrice(this.distributionPriceList)
-    //       this.innerVisible = false
-    //     } else {
-    //       this.$message({
-    //         message: res.message,
-    //         type: 'warning'
-    //       })
-    //     }
-    //   })
-    // },
-    // // 批量发起修改请求
-    // batchSendPsl(type) {
-    //   var num = this.getmodifyNum(type)
-    //   this.batchAdjustPrice.reqDtos.num = num
-    //   this.batchAdjustPrice.reqDtos.type = type
-    //   console.log(this.batchAdjustPrice)
-    //   batchSavePslDrpPolicy(this.batchAdjustPrice).then(res => {
-    //     if (!res.hasError) {
-    //       this.$message({
-    //         message: res.message,
-    //         type: 'success'
-    //       })
-    //       this.distributionPrice(this.distributionPriceList)
-    //       this.innerVisible = false
-    //     } else {
-    //       this.$message({
-    //         message: res.message,
-    //         type: 'warning'
-    //       })
-    //     }
-    //   })
-    // },
-    // 多选框的变动
-    handleSelectionChange(val) {
-      console.log(val)
-    },
-    // 调整分销价格
-    reviseDisPri(row) {
-      this.openType = 1
-      this.adjustPrice = row
-      this.innerVisible = true
-    },
-    isNull(val) {
-      if (val === null || val === undefined || val === '' || val === 'null' || val === 'undefined') {
-        return true
-      } return false
-    },
     /** 以下为接口函数 **/
-    getList() {
-      queryProductDrpPolicy({ 'productId': this.productId }).then(res => {
+
+    // 单个发起修改请求
+    sendPsl(type) {
+      console.log(this.adjustPrice)
+      var agentIds = this.adjustPrice.drpPolicyAgentDTOS.map(item => item.agentId).join(',')
+      var { groupId, productId, resourceId, segmentId, status } = this.adjustPrice
+      var num = this.getmodifyNum(type)
+      var params = {
+        reqDtos: {
+          agentIds,
+          groupId,
+          num,
+          productId,
+          resourceId,
+          segmentId,
+          status,
+          type
+        }
+      }
+      saveProductDrpPolicy(params).then(res => {
         console.log(res)
+        if (!res.hasError) {
+          this.$message({
+            message: res.message,
+            type: 'success'
+          })
+          this.getList()
+          this.innerVisible = false
+        } else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      })
+    },
+    // 批量发起修改请求
+    batchSendPsl(type) {
+      var num = this.getmodifyNum(type)
+      this.batchAdjustPrice.reqDtos.num = num
+      this.batchAdjustPrice.reqDtos.type = type
+      console.log(this.batchAdjustPrice)
+      batchSaveProductDrpPolicy(this.batchAdjustPrice).then(res => {
+        if (!res.hasError) {
+          this.$message({
+            message: res.message,
+            type: 'success'
+          })
+          this.getList()
+          this.innerVisible = false
+        } else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      })
+    },
+    getList() {
+      queryProductDrpPolicy(this.productId).then(res => {
+        if (!res.hasError) {
+          this.gridData = res.data
+        }
       })
     },
     // 设置有无效
     setInvalid(row) {
-      // const { groupId, num, status, type, productId, resourceId, segmentId } = row
-      // const agentIds = row.drpPolicyAgentDTOS.map(item => item.agentId).join(',')
-      // const params = {
-      //   reqDtos: {
-      //     agentIds,
-      //     productId,
-      //     resourceId,
-      //     segmentId,
-      //     groupId,
-      //     num,
-      //     status,
-      //     type
-      //   }
-      // }
-      // updatePslDrpPolicyStatus(params).then(res => {
-      //   if (!res.hasError) {
-      //     this.$message({
-      //       message: res.message,
-      //       type: 'success'
-      //     })
-      //     // 刷新列表
-      //     this.distributionPrice({
-      //       productId,
-      //       resourceId,
-      //       segmentLnkId: segmentId
-      //     })
-      //   } else {
-      //     this.$message({
-      //       message: res.message,
-      //       type: 'warning'
-      //     })
-      //   }
-      // })
+      console.log(row)
+      const { groupId, num, status, type, productId, resourceId, segmentId } = row
+      const agentIds = row.drpPolicyAgentDTOS.map(item => item.agentId).join(',')
+      const changeSte = status === 1 ? 0 : 1
+
+      const params = {
+        reqDtos: {
+          agentIds,
+          productId,
+          resourceId,
+          segmentId,
+          groupId,
+          num,
+          status: changeSte,
+          type
+        }
+      }
+      updateProductDrpPolicyStatus(params).then(res => {
+        if (!res.hasError) {
+          this.$message({
+            message: res.message,
+            type: 'success'
+          })
+          // 刷新列表
+          this.getList()
+        } else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      })
     }
   }
 }
