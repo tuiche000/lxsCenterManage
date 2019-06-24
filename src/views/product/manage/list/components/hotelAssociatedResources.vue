@@ -20,8 +20,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="listPageNum" :limit.sync="listPageSize" @pagination="getList" />
     </div>
+    <pagination v-show="listTotal>0" :total="listTotal" :page.sync="listPageNum" :limit.sync="listPageSize" @pagination="getList" />
+
     <el-dialog :visible.sync="dialogTableVisible">
       <span slot="title" class="dialog-footer">
         <div class="x-flex-container between">

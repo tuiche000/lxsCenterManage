@@ -1,66 +1,69 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-row :gutter="5">
-        <el-col :span="4" class="right">
-          <span>产品ID:</span>
-          <el-input v-model="params.reqDtos.productId" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        </el-col>
-        <el-col :span="4" class="right">
-          <span>产品名称:</span>
-          <el-input v-model="params.reqDtos.productName" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        </el-col>
-        <el-col :span="4" class="right">
-          <span>产品类型:*</span>
-          <el-select v-model="params.reqDtos.type" clearable style="width: 110px" class="filter-item">
-            <el-option v-for="item in productChildType" :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
-        </el-col>
-        <el-col :span="4" class="right">
-          <span>产品范围:</span>
-          <el-select v-model="params.reqDtos.typeArea" clearable style="width: 110px" class="filter-item">
-            <el-option v-for="item in productRange" :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
-        </el-col>
-        <el-col :span="4" class="right">
-          <span>所含资源ID:</span>
-          <el-input v-model="params.reqDtos.resourceId" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        </el-col>
-        <el-col :span="4" class="right">
-          <span>出发城市:*</span>
-          <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        </el-col>
-      </el-row>
-      <el-row :gutter="5">
-        <el-col :span="4" class="right">
-          <span>目的城市:*</span>
-          <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        </el-col>
-        <el-col :span="4" class="right">
-          <span>售卖城市:*</span>
-          <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        </el-col>
-        <el-col :span="4" class="right">
-          <span>产品副标题:</span>
-          <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        </el-col>
-        <el-col :span="4" class="right">
-          <span>产品经理:*</span>
-          <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        </el-col>
-        <el-col :span="4" class="right">
-          <span>制作状态:</span>
-          <el-select v-model="params.reqDtos.typeEdit" clearable style="width: 110px" class="filter-item">
-            <el-option v-for="item in typeEdit" :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
-        </el-col>
-        <el-col :span="4" class="right">
-          <span>发布状态:</span>
-          <el-select v-model="params.reqDtos.typePublish" clearable style="width: 110px" class="filter-item">
-            <el-option v-for="item in typePublish" :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
-        </el-col>
-      </el-row>
+    <div class="filter-container" sytle="display:flex;">
+      <div style="width:90%;margin-right:2%;">
+        <el-row :gutter="5">
+          <el-col :span="4" class="right">
+            <span>产品ID:</span>
+            <el-input v-model="params.reqDtos.productId" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          </el-col>
+          <el-col :span="4" class="right">
+            <span>产品名称:</span>
+            <el-input v-model="params.reqDtos.productName" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          </el-col>
+          <el-col :span="4" class="right">
+            <span>产品类型:*</span>
+            <el-select v-model="params.reqDtos.type" clearable style="width: 110px" class="filter-item">
+              <el-option v-for="item in productChildType" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-col>
+          <el-col :span="4" class="right">
+            <span>产品范围:</span>
+            <el-select v-model="params.reqDtos.typeArea" clearable style="width: 110px" class="filter-item">
+              <el-option v-for="item in productRange" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-col>
+          <el-col :span="4" class="right">
+            <span>所含资源ID:</span>
+            <el-input v-model="params.reqDtos.resourceId" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          </el-col>
+          <el-col :span="4" class="right">
+            <span>出发城市:*</span>
+            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          </el-col>
+        </el-row>
+        <el-row :gutter="5">
+          <el-col :span="4" class="right">
+            <span>目的城市:*</span>
+            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          </el-col>
+          <el-col :span="4" class="right">
+            <span>售卖城市:*</span>
+            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          </el-col>
+          <el-col :span="4" class="right">
+            <span>产品副标题:</span>
+            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          </el-col>
+          <el-col :span="4" class="right">
+            <span>产品经理:*</span>
+            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          </el-col>
+          <el-col :span="4" class="right">
+            <span>制作状态:</span>
+            <el-select v-model="params.reqDtos.typeEdit" clearable style="width: 110px" class="filter-item">
+              <el-option v-for="item in typeEdit" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-col>
+          <el-col :span="4" class="right">
+            <span>发布状态:</span>
+            <el-select v-model="params.reqDtos.typePublish" clearable style="width: 110px" class="filter-item">
+              <el-option v-for="item in typePublish" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-col>
+        </el-row>
+      </div>
+
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter" />
       <!-- <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         Add
@@ -131,6 +134,7 @@
         </template>
       </el-table-column> -->
     </el-table>
+    <!-- <el-pagination class="div_pagination" layout="total, sizes, prev, pager, next, jumper" /> -->
 
     <pagination v-show="total>0" :total="total" :page.sync="params.paginationDTO.pageNumber" :limit.sync="params.paginationDTO.pageSize" @pagination="getList" />
 

@@ -1,6 +1,6 @@
 <template>
   <div class="flex_div">
-    <div class="div_card">
+    <!-- <div class="div_card">
       <div class="div_card_top">
         <div class="f2">
           <p>
@@ -9,57 +9,219 @@
         </div>
         <div class="fr">
           <span>筛选查询</span>
+
         </div>
       </div>
-      <!-- <el-collapse-transition>
+      <el-collapse-transition>
         <div>
           我是乱七八糟
         </div>
-      </el-collapse-transition> -->
-    </div>
+      </el-collapse-transition>
+    </div> -->
     <div class="flex_auto div_card flex_div">
-      <!-- <div class="div_card_top">
+      <div class="div_card_top">
         <div class="f2">
-          左边
+          <el-button type="primary" @click="openDialog(null,3)">创建分销组</el-button>
+
         </div>
-        <div class="fr">
+        <!-- <div class="fr">
           右边
-        </div>
-      </div> -->
-      <el-table ref="multipleTable" stripe height="100%" class="div_card_mid flex_auto table_left_2 table_left_3" tooltip-effect="dark">
-        <el-table-column type="selection" width="55" :selectable="selectable" />
-        <el-table-column prop="storeId" label="门店编码" show-overflow-tooltip />
-        <el-table-column prop="storeName" label="门店名称" width="130" show-overflow-tooltip />
-        <el-table-column prop="storeName" label="门店营业段" width="200" />
-        <el-table-column label="门店类型" width="120" />
-        <el-table-column prop="address" label="地址" show-overflow-tooltip width="200" />
-        <el-table-column prop="contactorTel" label="联系电话" width="120" />
-        <el-table-column label="门店状态" />
-        <el-table-column fixed="right" label="操作" width="100" />
+        </div> -->
+      </div>
+      <el-table ref="table" row-key="agentId" :data="list" :tree-props="{children: 'drpPolicyAgentDTOS'}" stripe tooltip-effect="dark">
+        <el-table-column label="分组/成员" align="left" show-overflow-tooltip min-width="150">
+          <template slot-scope="{row}">
+            <span v-if="row.groupName">{{ row.groupName }}</span>
+            <span v-if="row.companyName">{{ row.companyName }}</span>
+
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" align="center" label="操作" width="200">
+          <template slot-scope="{row}">
+            <el-button v-if="row.drpPolicyAgentDTOS" type="text" @click="openDialog(row,2)">分组重命名</el-button>
+
+            <el-popover
+              v-if="row.drpPolicyAgentDTOS"
+              :ref="row.groupId"
+              placement="bottom"
+              width="200"
+              trigger="click"
+            >
+              <p>确认要删除分销组吗？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="$refs[row.groupId].doClose()">取消</el-button>
+                <el-button type="primary" size="mini" @click="delgroup(row.groupId)">确定</el-button>
+              </div>
+              <el-button slot="reference" type="text">删除分销组</el-button>
+            </el-popover>
+
+            <el-button v-if="row.companyName" type="text" @click="openDialog(row,1)">更换分销组</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
-    <el-pagination class="div_pagination" layout="total, sizes, prev, pager, next, jumper" />
+    <!-- <Pagination class="div_pagination" layout="total, sizes, prev, pager, next, jumper" /> -->
+    <el-dialog
+      :title="type==1?'请选择分组':'组名称'"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <el-select v-if="type==1" v-model="changeGroup" placeholder="请选择">
+        <el-option
+          v-for="item in Grouping"
+          :key="item.groupId"
+          :label="item.groupName"
+          :value="item.groupId"
+        />
+      </el-select>
+      <el-input v-else v-model="changeGroup" placeholder="请输入组名称" />
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="determine">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 <script>
+import { getGrop, rename, changeGroupReq, deleteGropu, createGropu } from '@/api/sales'
+
+// import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+
 export default {
   name: '',
-  components: {},
+  // components: { Pagination },
   props: {},
   data() {
     return {
+      type: 1,
+      list: [],
+      dialogVisible: false,
+      visible: false,
+      Grouping: [],
+      changeGroup: '',
+      changeId: null,
+      changeGroupObj: {
+
+      }
     }
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.getList()
+  },
   mounted() {},
   activated() {},
-  methods: {}
+  methods: {
+    openDialog(row, num) {
+      this.type = num
+      switch (num) {
+        case 1:
+          this.changeGroupObj = {
+            'agentId': row.agentId,
+            'sourceGroupId': row.groupId,
+            'targetGroupId': 0
+          }
+          break
+        case 2:
+          this.changeId = row.groupId
+          break
+      }
+      this.dialogVisible = true
+    },
+    handleClose() {
+      this.changeGroup = ''
+      this.dialogVisible = false
+    },
+    check(tit) {
+      if (this.changeGroup === '') {
+        this.$message({
+          message: tit,
+          type: 'warning'
+        })
+        return true
+      }
+    },
+    reLoad(msg) {
+      this.$message({
+        message: msg,
+        type: 'success'
+      })
+      this.getList()
+      this.changeGroup = ''
+      this.dialogVisible = false
+    },
+    /** 以下为接口 **/
+    determine() {
+      switch (this.type) {
+        case 1:
+          this.changeGroupObj.targetGroupId = this.changeGroup
+          if (this.check('请选择分组')) break
+          changeGroupReq(this.changeGroupObj).then(res => {
+            if (!res.hasError) {
+              this.reLoad(res.message)
+            }
+          })
+          break
+        case 2:
+          if (this.check('请输入组名')) break
+          rename({
+            groupId: this.changeId,
+            groupName: this.changeGroup
+          }).then(res => {
+            if (!res.hasError) {
+              this.reLoad(res.message)
+            }
+          })
+          break
+        case 3:
+          if (this.check('请输入组名')) break
+          createGropu({
+            groupName: this.changeGroup
+          }).then(res => {
+            if (!res.hasError) {
+              this.reLoad(res.message)
+            }
+          })
+      }
+    },
+    getList() {
+      getGrop().then(res => {
+        if (!res.hasError) {
+          this.Grouping = []
+          const newList = res.data || []
+          newList.map(item => {
+            this.Grouping.push({ groupName: item.groupName, groupId: item.groupId })
+            if (item.drpPolicyAgentDTOS.length !== 0) {
+              item.drpPolicyAgentDTOS.map(val => {
+                val.groupId = item.groupId
+              })
+              item.children = item.drpPolicyAgentDTOS
+            }
+            item.agentId = item.groupId
+          })
+          console.log('获取到数据了')
+          this.list = newList || []
+          console.log(newList)
+        }
+      })
+    },
+    delgroup(id) {
+      deleteGropu(id).then(res => {
+        if (!res.hasError) {
+          this.$message({
+            message: res.message,
+            type: 'success'
+          })
+          this.getList()
+          this.$refs[id].doClose()
+        }
+      })
+    }
+  }
 }
 </script>
-<style lang='scss' scoped>
-</style>
 
 <style lang='scss' scoped>
 .el-alert__content{
