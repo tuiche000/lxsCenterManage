@@ -69,8 +69,29 @@ export function batchSavePslDrpPolicy(data) {
 // 产品分销价格 产品列表 自由行-自由行套餐-跟团游相关
 export function queryProductDrpPolicy(query) {
   return request({
-    url: '/sys/product/drpPolicyProduct/queryProductDrpPolicy',
-    method: 'get',
-    params: query
+    url: `/sys/product/drpPolicyProduct/queryProductDrpPolicy/${query}`,
+    method: 'get'
   })
 }
+export function updateProductDrpPolicyStatus(data) {
+  return request({
+    url: '/sys/product/drpPolicyProduct/updateProductDrpPolicyStatus',
+    method: 'post',
+    data
+  })
+}
+export function saveProductDrpPolicy(data) {
+  return request({
+    url: '/sys/product/drpPolicyProduct/saveProductDrpPolicy',
+    method: 'post',
+    data
+  })
+}
+export function batchSaveProductDrpPolicy(data) {
+  return request({
+    url: '/sys/product/drpPolicyProduct/batchSaveProductDrpPolicy',
+    method: 'post',
+    data
+  })
+}
+

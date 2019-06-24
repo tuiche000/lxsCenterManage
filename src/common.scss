@@ -165,11 +165,10 @@ b {
     margin-bottom: 30px;
 }
 
-.el-checkbox__input.is-checked .el-checkbox__inner {
-    background-color: $body_bg !important;
-    border-color: $body_bg !important;
-}
-
+// .el-checkbox__input.is-checked .el-checkbox__inner {
+//     background-color: $body_bg !important;
+//     border-color: $body_bg !important;
+// }
 .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
     border-color: $white;
 }
@@ -496,6 +495,12 @@ b {
             bottom: 4px;
         }
     }
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @for $i from 1 to 11 {
