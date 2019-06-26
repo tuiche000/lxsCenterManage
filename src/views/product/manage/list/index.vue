@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="filter-container" sytle="display:flex;">
+    <div class="filter-container" style="display:flex;">
       <div style="width:90%;margin-right:2%;">
         <el-row :gutter="5">
           <el-col :span="4" class="right">
@@ -29,7 +29,15 @@
           </el-col>
           <el-col :span="4" class="right">
             <span>出发城市:*</span>
-            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+            <!-- <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" /> -->
+            <el-autocomplete
+              v-model="params.reqDtos.title"
+              style="width: 110px;"
+              class="inline-input"
+              :fetch-suggestions="querySearch"
+              placeholder="请输入出发城市"
+              @select="handleSelect"
+            />
           </el-col>
         </el-row>
         <el-row :gutter="5">
@@ -63,7 +71,6 @@
           </el-col>
         </el-row>
       </div>
-
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter" />
       <!-- <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         Add
@@ -301,6 +308,22 @@ export default {
     this.queryProductChildType()
   },
   methods: {
+    // 测试用
+    handleSelect(item) {
+      console.log(item)
+    },
+    querySearch(queryString, cb) {
+      var restaurants = this.restaurants
+      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    // 结束
     getList() {
       this.listLoading = true
       getQueryInfoList(this.params).then(response => {
