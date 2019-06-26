@@ -34,8 +34,9 @@
               v-model="params.reqDtos.title"
               style="width: 110px;"
               class="inline-input"
-              :fetch-suggestions="querySearch"
+              :fetch-suggestions="querySearch()"
               placeholder="请输入出发城市"
+              select-when-unmatched
               @select="handleSelect"
             />
           </el-col>
@@ -299,8 +300,10 @@ export default {
       productChildType: [],
       productRange: [{ id: '', name: '全部' }, { id: '1', name: '国内' }, { id: '2', name: '出境' }, { id: '3', name: '入境' }],
       typeEdit: [{ id: '', name: '全部' }, { id: '1', name: '制作中' }, { id: '2', name: '制作完成' }],
-      typePublish: [{ id: '', name: '全部' }, { id: '1', name: '发布成功' }, { id: '2', name: '未发布' }, { id: '3', name: '已下线' }, { id: '4', name: '发布中' }, { id: '5', name: '发布失败' }]
-
+      typePublish: [{ id: '', name: '全部' }, { id: '1', name: '发布成功' }, { id: '2', name: '未发布' }, { id: '3', name: '已下线' }, { id: '4', name: '发布中' }, { id: '5', name: '发布失败' }],
+      restaurants: [
+        { 'value': '三全鲜食（北新泾店）', 'address': '长宁区新渔路144号' }
+      ]
     }
   },
   created() {
@@ -315,6 +318,9 @@ export default {
     querySearch(queryString, cb) {
       var restaurants = this.restaurants
       var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      if (results.length === 0) {
+        console.log('没有符合项')
+      }
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
