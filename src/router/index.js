@@ -44,6 +44,10 @@ import salesRouter from './modules/sales'
  */
 export const constantRoutes = [
   {
+    path: '',
+    redirect: '/home'
+  },
+  {
     path: '/redirect',
     component: Layout,
     hidden: true,
