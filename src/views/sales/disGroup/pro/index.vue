@@ -28,7 +28,7 @@
           右边
         </div> -->
       </div>
-      <el-table ref="table" row-key="agentId" :data="list" :tree-props="{children: 'drpPolicyAgentDTOS'}" stripe tooltip-effect="dark">
+      <el-table ref="table" row-key="agentId" :data="list" :tree-props="{children: 'drpPolicyAgentDTOS'}" tooltip-effect="dark">
         <el-table-column label="分组/成员" align="left" show-overflow-tooltip min-width="150">
           <template slot-scope="{row}">
             <span v-if="row.groupName">{{ row.groupName }}</span>
