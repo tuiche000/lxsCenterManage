@@ -1,86 +1,87 @@
 <template>
   <div class="app-container">
-    <div class="filter-container" style="display:flex;">
-      <div style="width:90%;margin-right:2%;">
-        <el-row :gutter="5">
-          <el-col :span="4" class="right">
-            <span>产品ID:</span>
-            <el-input v-model="params.reqDtos.productId" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-          </el-col>
-          <el-col :span="4" class="right">
-            <span>产品名称:</span>
-            <el-input v-model="params.reqDtos.productName" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-          </el-col>
-          <el-col :span="4" class="right">
-            <span>产品类型:*</span>
+    <el-form ref="form" class="flex_around" :rules="formRules" :model="params.reqDtos" label-width="80px">
+      <div style="width:94%;display:flex;flex-direction:column;">
+        <div class="flex_around">
+          <el-form-item label="产品ID:">
+            <el-input v-model="params.reqDtos.productId" style="width: 110px;" class="filter-item" @keyup.enter.native="submitForm('form')" />
+          </el-form-item>
+          <el-form-item label="产品名称:">
+            <el-input v-model="params.reqDtos.productName" style="width: 110px;" class="filter-item" @keyup.enter.native="submitForm('form')" />
+          </el-form-item>
+          <el-form-item label="产品类型:">
             <el-select v-model="params.reqDtos.type" clearable style="width: 110px" class="filter-item">
               <el-option v-for="item in productChildType" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
-          </el-col>
-          <el-col :span="4" class="right">
-            <span>产品范围:</span>
+          </el-form-item>
+          <el-form-item label="产品范围:">
             <el-select v-model="params.reqDtos.typeArea" clearable style="width: 110px" class="filter-item">
               <el-option v-for="item in productRange" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
-          </el-col>
-          <el-col :span="4" class="right">
-            <span>所含资源ID:</span>
-            <el-input v-model="params.reqDtos.resourceId" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-          </el-col>
-          <el-col :span="4" class="right">
-            <span>出发城市:*</span>
-            <!-- <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" /> -->
+          </el-form-item>
+          <el-form-item label="所含资源ID:">
+            <el-input v-model="params.reqDtos.resourceId" style="width: 110px;" class="filter-item" @keyup.enter.native="submitForm('form')" />
+          </el-form-item>
+          <el-form-item label="出发城市:" prop="departureCityTxt">
             <el-autocomplete
-              v-model="params.reqDtos.title"
+              v-model="params.reqDtos.departureCityTxt"
               style="width: 110px;"
               class="inline-input"
-              :fetch-suggestions="querySearch()"
-              placeholder="请输入出发城市"
-              select-when-unmatched
-              @select="handleSelect"
+              :fetch-suggestions="querySearch"
+              value-key="name"
+              value="id"
+              @select="((item)=>{handleSelect(item, 'departureCity')})"
             />
-          </el-col>
-        </el-row>
-        <el-row :gutter="5">
-          <el-col :span="4" class="right">
-            <span>目的城市:*</span>
-            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-          </el-col>
-          <el-col :span="4" class="right">
-            <span>售卖城市:*</span>
-            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-          </el-col>
-          <el-col :span="4" class="right">
-            <span>产品副标题:</span>
-            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-          </el-col>
-          <el-col :span="4" class="right">
-            <span>产品经理:*</span>
-            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-          </el-col>
-          <el-col :span="4" class="right">
-            <span>制作状态:</span>
+          </el-form-item>
+        </div>
+        <div class="flex_around">
+          <el-form-item label="目的城市:" prop="destinationCityTxt">
+            <el-autocomplete
+              v-model="params.reqDtos.destinationCityTxt"
+              style="width: 110px;"
+              class="inline-input"
+              :fetch-suggestions="querySearch"
+              value-key="name"
+              @select="((item)=>{handleSelect(item, 'destinationCity')})"
+            />
+          </el-form-item>
+          <el-form-item label="售卖城市:" prop="sellingCityTxt">
+            <el-autocomplete
+              v-model="params.reqDtos.sellingCityTxt"
+              style="width: 110px;"
+              class="inline-input"
+              :fetch-suggestions="querySearch"
+              value-key="name"
+              @select="((item)=>{handleSelect(item, 'sellingCity')})"
+            />
+          </el-form-item>
+          <el-form-item label="产品副标题:">
+            <el-input v-model="params.reqDtos.title" style="width: 110px;" class="filter-item" @keyup.enter.native="submitForm('form')" />
+          </el-form-item>
+          <el-form-item label="产品经理:" prop="employeeOwnerTxt">
+            <el-autocomplete
+              v-model="params.reqDtos.employeeOwnerTxt"
+              style="width: 110px;"
+              class="inline-input"
+              :fetch-suggestions="nameSearch"
+              value-key="name"
+              @select="((item)=>{handleSelect(item, 'employeeOwner')})"
+            />
+          </el-form-item>
+          <el-form-item label="制作状态:">
             <el-select v-model="params.reqDtos.typeEdit" clearable style="width: 110px" class="filter-item">
               <el-option v-for="item in typeEdit" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
-          </el-col>
-          <el-col :span="4" class="right">
-            <span>发布状态:</span>
+          </el-form-item>
+          <el-form-item label="发布状态:">
             <el-select v-model="params.reqDtos.typePublish" clearable style="width: 110px" class="filter-item">
               <el-option v-for="item in typePublish" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
-          </el-col>
-        </el-row>
+          </el-form-item>
+        </div>
       </div>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter" />
-      <!-- <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
-        Add
-      </el-button> -->
-      <!-- <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        Export
-      </el-button> -->
-    </div>
-
+      <el-button class="m-b-20" type="primary" icon="el-icon-search" @click="submitForm('form')" />
+    </el-form>
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -94,34 +95,11 @@
       <el-table-column label="产品ID" prop="productId" align="center" width="80" />
       <el-table-column label="产品名称" prop="productName" align="center" width="150" show-overflow-tooltip />
       <el-table-column label="产品副标题" prop="title" align="center" width="150" show-overflow-tooltip />
-      <el-table-column label="产品类型" min-width="60" align="center" prop="productTypeName">
-        <!-- <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template> -->
-      </el-table-column>
-      <el-table-column label="出发城市" min-width="80" align="center" prop="departuretCityList">
-        <!-- <template slot-scope="scope">
-          <span style="color:red;">{{ scope.row.reviewer }}</span>
-        </template> -->
-      </el-table-column>
-      <el-table-column label="目的城市" min-width="100" align="center" prop="arrivalCityList">
-        <!-- <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" />
-        </template> -->
-      </el-table-column>
-      <el-table-column label="售卖城市" align="center" min-width="95" prop="saleCityList">
-        <!-- <template slot-scope="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
-        </template> -->
-      </el-table-column>
-      <el-table-column label="产品经理" class-name="status-col" align="center" min-width="100" prop="employeeOwner">
-        <!-- <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template> -->
-      </el-table-column>
+      <el-table-column label="产品类型" min-width="60" align="center" prop="productTypeName" />
+      <el-table-column label="出发城市" min-width="80" align="center" prop="departuretCityList" />
+      <el-table-column label="目的城市" min-width="100" align="center" prop="arrivalCityList" />
+      <el-table-column label="售卖城市" align="center" min-width="95" prop="saleCityList" />
+      <el-table-column label="产品经理" class-name="status-col" align="center" min-width="100" prop="employeeOwner" />
       <el-table-column label="制作状态" min-width="100" align="center" prop="typeEditName" />
       <el-table-column label="发布状态" min-width="100" align="center" prop="typePublishName" />
       <el-table-column label="创建时间" min-width="150" align="center" prop="createTime" />
@@ -199,8 +177,7 @@ import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
-// import { getQueryInfoList, getQueryProductChildType, getCity } from '@/api/list'
-import { getQueryInfoList, getQueryProductChildType } from '@/api/list'
+import { getQueryInfoList, getQueryProductChildType, getCity, getNameQuery } from '@/api/list'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -233,19 +210,35 @@ export default {
     }
   },
   data() {
+    function isInArray(arr, value) {
+      for (let i = 0; i < arr.length; i++) {
+        if (value === arr[i].name) {
+          return true
+        }
+      }
+      return false
+    }
+    const validator1 = (rule, value, callback) => {
+      if (!value)callback()
+      if (isInArray(this.city, value)) {
+        callback()
+      } else {
+        callback(new Error('请选择列表中已有选项'))
+      }
+    }
+    const validator2 = (rule, value, callback) => {
+      if (!value)callback()
+      if (isInArray(this.name, value)) {
+        callback()
+      } else {
+        callback(new Error('请选择列表中已有选项'))
+      }
+    }
     return {
       tableKey: 0,
       list: null,
       total: 0,
       listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
-      },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
@@ -297,26 +290,59 @@ export default {
         }
       },
       city: [],
+      name: [],
       productChildType: [],
       productRange: [{ id: '', name: '全部' }, { id: '1', name: '国内' }, { id: '2', name: '出境' }, { id: '3', name: '入境' }],
       typeEdit: [{ id: '', name: '全部' }, { id: '1', name: '制作中' }, { id: '2', name: '制作完成' }],
       typePublish: [{ id: '', name: '全部' }, { id: '1', name: '发布成功' }, { id: '2', name: '未发布' }, { id: '3', name: '已下线' }, { id: '4', name: '发布中' }, { id: '5', name: '发布失败' }],
-      restaurants: [
-        { 'value': '三全鲜食（北新泾店）', 'address': '长宁区新渔路144号' }
-      ]
+      formRules: {
+        departureCityTxt: [
+          { trigger: 'blur', validator: validator1 }
+        ],
+        destinationCityTxt: [
+          { trigger: 'blur', validator: validator1 }
+        ],
+        sellingCityTxt: [
+          { trigger: 'blur', validator: validator1 }
+        ],
+        employeeOwnerTxt: [
+          { trigger: 'blur', validator: validator2 }
+        ]
+      }
     }
   },
   created() {
     this.getList()
+    this.getcity()
+    this.getName()
     this.queryProductChildType()
   },
   methods: {
-    // 测试用
-    handleSelect(item) {
-      console.log(item)
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.onSubmit()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    handleSelect(company, txt) {
+      if (txt === 'employeeOwner') {
+        this.params.reqDtos[txt] = this.name.find(item => item.name === company.name).id
+      } else {
+        console.log(this.params.reqDtos[txt + 'Txt'])
+        this.params.reqDtos[txt] = this.city.find(item => item.name === company.name).id
+      }
     },
     querySearch(queryString, cb) {
-      var restaurants = this.restaurants
+      var restaurants = this.city
+      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      cb(results)
+    },
+    nameSearch(queryString, cb) {
+      var restaurants = this.name
       var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
       if (results.length === 0) {
         console.log('没有符合项')
@@ -326,10 +352,26 @@ export default {
     },
     createFilter(queryString) {
       return (restaurant) => {
-        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+        return (restaurant.name.indexOf(queryString) === 0)
       }
     },
     // 结束
+    onSubmit() {
+      this.params.paginationDTO.pageNumber = 1
+      const { reqDtos } = this.params
+      // 如果用户不点击输入建议 直接搜索 会导致没有对应的ID 所以需要便利一下 由于employeeOwner是产品经理id 所以对应的通过namefind
+      const array = ['departureCity', 'destinationCity', 'sellingCity', 'employeeOwner']
+      array.map((item, index) => {
+        if (reqDtos[item + 'Txt'] && !item) {
+          if (index === array.length) {
+            reqDtos[item] = this.name.find(val => val.name === reqDtos.name).id
+          } else {
+            reqDtos[item] = this.city.find(val => val.name === reqDtos.name).id
+          }
+        }
+      })
+      this.getList()
+    },
     getList() {
       this.listLoading = true
       getQueryInfoList(this.params).then(response => {
@@ -339,11 +381,6 @@ export default {
           this.listLoading = false
         }, 1.5 * 1000)
       })
-    },
-    handleFilter() {
-      // this.listQuery.page = 1
-      this.params.paginationDTO.pageNumber = 1
-      this.getList()
     },
     handleModifyStatus(row, status) {
       this.$message({
@@ -364,7 +401,6 @@ export default {
       } else {
         this.listQuery.sort = '-id'
       }
-      this.handleFilter()
     },
     resetTemp() {
       this.temp = {
@@ -489,20 +525,31 @@ export default {
           this.productChildType = res.data
         }
       })
+    },
+    getcity() {
+      getCity({}).then(res => {
+        if (!res.hasError) {
+          this.city = res.data
+        }
+      })
+    },
+    getName() {
+      getNameQuery({}).then(res => {
+        if (!res.hasError) {
+          this.name = res.data
+        }
+      })
     }
-    // getcity() {
-    //   getCity().then(res => {
-    //     if (!res.hasError) {
-    //       this.city = res.data
-    //     }
-    //   })
-    // }
   }
 }
 </script>
 <style lang='scss'>
   .right{
     text-align: right;
+  }
+  .flex_around{
+    display: flex;
+    justify-content: space-around;
   }
 </style>
 
