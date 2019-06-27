@@ -53,7 +53,6 @@ export default {
   created() {
     console.log(this.$route)
     this.product = JSON.parse(this.$route.query.detail)
-    this.$store.dispatch('common/setId', this.product.productId)
   },
   methods: {
 
