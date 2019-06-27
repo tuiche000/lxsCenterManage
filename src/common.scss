@@ -480,6 +480,14 @@ b {
     }
 }
 
+.el-form {
+    .el-form-item {
+        .el-form-item__label {
+            font-size: 12px;
+        }
+    }
+}
+
 .take_out_dishes {
     padding: 0 20px;
 }

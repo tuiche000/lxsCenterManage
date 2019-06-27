@@ -21,6 +21,13 @@ export function getCity(data) {
     data
   })
 }
+export function getNameQuery(data) {
+  return request({
+    url: '/sys/employee/name/query',
+    method: 'post',
+    data
+  })
+}
 export function productsegment(data) {
   return request({
     url: '/sys/productsegment/query',
