@@ -83,7 +83,6 @@
       <el-button class="m-b-20" type="primary" icon="el-icon-search" @click="submitForm('form')" />
     </el-form>
     <el-table
-      :key="tableKey"
       v-loading="listLoading"
       :data="list"
       border
@@ -146,6 +145,8 @@ export default {
       }
     }
     return {
+      list: [],
+      total: 0,
       params: {
         paginationDTO: {
           pageNumber: 1,
@@ -168,6 +169,7 @@ export default {
           typePublish: ''
         }
       },
+      listLoading: false,
       city: [],
       name: [],
       productChildType: [],
