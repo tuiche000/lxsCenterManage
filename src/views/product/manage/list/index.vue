@@ -91,18 +91,19 @@
       style="width: 100%;"
       @row-dblclick="rowDbclick"
     >
-      <el-table-column class="pointer" label="产品ID" prop="productId" align="center" width="80" />
-      <el-table-column class="pointer" label="产品名称" prop="productName" align="center" width="150" show-overflow-tooltip />
-      <el-table-column class="pointer" label="产品副标题" prop="title" align="center" width="150" show-overflow-tooltip />
-      <el-table-column class="pointer" label="产品类型" min-width="60" align="center" prop="productTypeName" />
-      <el-table-column class="pointer" label="出发城市" min-width="80" align="center" prop="departuretCityList" />
-      <el-table-column class="pointer" label="目的城市" min-width="100" align="center" prop="arrivalCityList" />
-      <el-table-column class="pointer" label="售卖城市" align="center" min-width="95" prop="saleCityList" />
-      <el-table-column class="pointer" label="产品经理" class-name="status-col" align="center" min-width="100" prop="employeeOwner" />
-      <el-table-column class="pointer" label="制作状态" min-width="100" align="center" prop="typeEditName" />
-      <el-table-column class="pointer" label="发布状态" min-width="100" align="center" prop="typePublishName" />
-      <el-table-column class="pointer" label="创建时间" min-width="150" align="center" prop="createTime" />
+      <el-table-column label="产品ID" prop="productId" align="center" width="80" />
+      <el-table-column label="产品名称" prop="productName" align="center" width="150" show-overflow-tooltip />
+      <el-table-column label="产品副标题" prop="title" align="center" width="150" show-overflow-tooltip />
+      <el-table-column label="产品类型" min-width="60" align="center" prop="productTypeName" />
+      <el-table-column label="出发城市" min-width="80" align="center" prop="departuretCityList" show-overflow-tooltip />
+      <el-table-column label="目的城市" min-width="100" align="center" prop="arrivalCityList" show-overflow-tooltip />
+      <el-table-column label="售卖城市" align="center" min-width="95" prop="saleCityList" show-overflow-tooltip />
+      <el-table-column label="产品经理" align="center" min-width="100" prop="employeeOwner" />
+      <el-table-column label="制作状态" min-width="100" align="center" prop="typeEditName" />
+      <el-table-column label="发布状态" min-width="100" align="center" prop="typePublishName" />
+      <el-table-column label="创建时间" min-width="150" align="center" prop="createTime" />
     </el-table>
+
     <pagination v-show="total>0" :total="total" :page.sync="params.paginationDTO.pageNumber" :limit.sync="params.paginationDTO.pageSize" @pagination="getList" />
 
   </div>
@@ -137,6 +138,7 @@ export default {
       }
     }
     const validator2 = (rule, value, callback) => {
+      console.log(value)
       if (!value)callback()
       if (isInArray(this.name, value)) {
         callback()
@@ -298,6 +300,9 @@ export default {
   .flex_around{
     display: flex;
     justify-content: space-around;
+  }
+  .f-s12{
+    font-size: 12px;
   }
 </style>
 

@@ -1,3 +1,10 @@
+<!--
+ * @Description:
+ * @Author: Ryan.HH
+ * @Date: 2019-10-24 12:09:01
+ * @LastEditors: Ryan.HH
+ * @LastEditTime: 2019-10-24 12:09:01
+ -->
 <template>
   <div style="padding:30px;">
     <el-alert :closable="false" title="information" type="success">
@@ -21,7 +28,7 @@ export default {
       arr: [12, 5]
     }
   },
-  computed() {},
+  computed: {},
   watch: {},
   created() {},
   mounted() {},

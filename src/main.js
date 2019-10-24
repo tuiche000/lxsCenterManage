@@ -27,10 +27,11 @@ import onlyNumber from '@/directive/el-input' // el-input全局指令
  * Currently MockJs will be used in the production environment,
  * please remove it before going online! ! !
  */
-import { mockXHR } from '../mock'
-if (process.env.NODE_ENV === 'production') {
-  mockXHR()
-}
+// 去除mock
+// import { mockXHR } from '../mock'
+// if (process.env.NODE_ENV === 'production') {
+//   mockXHR()
+// }
 Vue.use(onlyNumber)
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size

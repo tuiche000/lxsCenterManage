@@ -1,6 +1,7 @@
+
 <template>
   <div>
-    我是关联资源
+    我是分销组设置
     <isTravel v-if="isTravel" :product-id="productId" :product-type="productType" />
   </div>
 </template>
